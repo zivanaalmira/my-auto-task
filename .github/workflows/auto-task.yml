@@ -1,31 +1,25 @@
 name: Auto Crypto Scan
 
-# ðŸ”¹ Jalankan setiap 10 menit dan bisa manual trigger
 on:
   schedule:
     - cron: "*/10 * * * *"  # setiap 10 menit
-  workflow_dispatch:        # bisa dijalankan manual
+  workflow_dispatch:       
 
 jobs:
   crypto-scan:
     runs-on: ubuntu-latest
 
-    steps:
-      # 1ï¸âƒ£ Checkout repo
+    steps:      
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2ï¸âƒ£ Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
-
-      # 3ï¸âƒ£ Install dependencies
+        node-version: "20"
       - name: Install dependencies
         run: npm install axios
 
-      # 4ï¸âƒ£ Run scan script
       - name: Run Crypto Scan
         run: node index.js
         env:
