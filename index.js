@@ -1,64 +1,43 @@
 const axios = require("axios");
 const fs = require("fs");
 
-const FILE = "data.json";
+const FILE_JSON = "data.json";
 
-// Ambil dari GitHub Secrets
+// Telegram config dari GitHub Secrets
 const TELEGRAM_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
 // Kurs Rupiah
 const USD_TO_IDR = 16000;
+const BIG_PUMP_THRESHOLD = 1.05; // 5% kenaikan untuk BIG PUMP
 
-// Threshold BIG PUMP (naik minimal dibanding harga 10 menit lalu)
-const BIG_PUMP_THRESHOLD = 1.05; // 5% naik
-
-// ==============================
-// ?? FUNCTION TELEGRAM
-// ==============================
+// FUNCTION TELEGRAM
 async function sendTelegram(message) {
-  if (!TELEGRAM_TOKEN || !CHAT_ID) {
-    console.log("? Telegram config tidak ada");
-    return;
-  }
-
+  if (!TELEGRAM_TOKEN || !CHAT_ID) return;
   const url = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
-
   try {
-    const res = await axios.post(url, {
+    await axios.post(url, {
       chat_id: CHAT_ID,
       text: message,
       parse_mode: "Markdown"
     });
-    console.log("? Pesan Telegram terkirim:", res.data.ok ? "OK" : "FAILED");
+    console.log("✅ Pesan Telegram terkirim");
   } catch (err) {
-    console.error("? Error Telegram:", err.response?.data || err.message);
+    console.error("❌ Error Telegram:", err.response?.data || err.message);
   }
 }
 
-// ==============================
-// ?? MAIN FUNCTION
-// ==============================
+// MAIN FUNCTION
 async function getCrypto() {
   try {
-    console.time("Fetch API");
-
     const res = await axios.get("https://api.coingecko.com/api/v3/coins/markets", {
-      params: {
-        vs_currency: "usd",
-        order: "market_cap_desc",
-        per_page: 100,
-        page: 2 // mid cap
-      },
+      params: { vs_currency: "usd", order: "market_cap_desc", per_page: 100, page: 2 },
       timeout: 10000
     });
 
-    console.timeEnd("Fetch API");
-
+    // Load data lama
     let oldData = {};
-    if (fs.existsSync(FILE)) {
-      oldData = JSON.parse(fs.readFileSync(FILE));
-    }
+    if (fs.existsSync(FILE_JSON)) oldData = JSON.parse(fs.readFileSync(FILE_JSON));
 
     let newData = {};
     let early = [], beruntun = [], big = [];
@@ -69,116 +48,55 @@ async function getCrypto() {
       const priceIDR = priceUSD * USD_TO_IDR;
       const isCheap = priceIDR < USD_TO_IDR && priceIDR > 50;
 
-      // ?? EARLY PUMP
-      if (oldData[symbol] && oldData[symbol].length >= 1) {
-        const oldPriceUSD = oldData[symbol].slice(-1)[0];
-        const change = oldPriceUSD > 0
-          ? parseFloat(((priceUSD - oldPriceUSD)/oldPriceUSD * 100).toFixed(3))
-          : 0;
+      // EARLY PUMP
+      if (oldData[symbol]?.length >= 1) {
+        const oldPrice = oldData[symbol].slice(-1)[0];
+        const change = oldPrice > 0 ? parseFloat(((priceUSD - oldPrice)/oldPrice*100).toFixed(3)) : 0;
+        if (isCheap && change >= 0.1 && change < 0.5) early.push({ symbol, change, price: priceIDR });
+      }
 
-        if (isCheap && change >= 0.1 && change < 0.5) {
-          early.push({ symbol, change, price: priceIDR });
+      // PUMP BERUNTUN
+      if (oldData[symbol]?.length === 2) {
+        const [p20, p10] = oldData[symbol];
+        const ch1 = p20>0 ? parseFloat(((p10 - p20)/p20*100).toFixed(3)) : 0;
+        const ch2 = p10>0 ? parseFloat(((priceUSD - p10)/p10*100).toFixed(3)) : 0;
+        const totalChange = ch1 + ch2;
+        if (isCheap && ch1>0.15 && ch2>0.15 && c.total_volume*USD_TO_IDR>500000000 && c.price_change_percentage_24h>0) {
+          beruntun.push({ symbol, change1: ch1, change2: ch2, totalChange, price: priceIDR, volume: c.total_volume*USD_TO_IDR });
         }
       }
 
-      // ?? PUMP BERUNTUN
-      if (oldData[symbol] && oldData[symbol].length === 2) {
-        const [price20mUSD, price10mUSD] = oldData[symbol];
-        const change1 = price20mUSD > 0 ? parseFloat(((price10mUSD - price20mUSD)/price20mUSD*100).toFixed(3)) : 0;
-        const change2 = price10mUSD > 0 ? parseFloat(((priceUSD - price10mUSD)/price10mUSD*100).toFixed(3)) : 0;
-        const totalChange = change1 + change2;
-
-        if (
-          isCheap &&
-          change1 > 0.15 &&
-          change2 > 0.15 &&
-          c.total_volume * USD_TO_IDR > 500000000 &&
-          c.price_change_percentage_24h > 0
-        ) {
-          beruntun.push({
-            symbol,
-            change1,
-            change2,
-            totalChange,
-            price: priceIDR,
-            volume: c.total_volume * USD_TO_IDR
-          });
-        }
+      // BIG PUMP
+      if (isCheap && oldData[symbol]?.length>=2 && priceUSD > BIG_PUMP_THRESHOLD*oldData[symbol][0] && c.total_volume*USD_TO_IDR>1000000000 && c.price_change_percentage_24h>0) {
+        const oldPrice = oldData[symbol][0];
+        const change = ((priceUSD - oldPrice)/oldPrice*100).toFixed(3);
+        big.push({ symbol, price: priceIDR, volume: c.total_volume*USD_TO_IDR, change });
       }
 
-      // ?? BIG PUMP (flexible threshold)
-      if (
-        isCheap &&
-        oldData[symbol]?.length >= 2 &&
-        oldData[symbol][0] > 0 &&
-        priceUSD > BIG_PUMP_THRESHOLD * oldData[symbol][0] &&
-        c.total_volume * USD_TO_IDR > 1000000000 &&
-        c.price_change_percentage_24h > 0
-      ) {
-        const oldPriceUSD = oldData[symbol][0];
-        const changePercent = ((priceUSD - oldPriceUSD)/oldPriceUSD*100).toFixed(3) + "%";
-
-        if (c.total_volume / (c.total_volume_24h || 1) > 2) {
-          big.push({
-            symbol,
-            price: priceIDR,
-            volume: c.total_volume * USD_TO_IDR,
-            change: changePercent
-          });
-        }
-      }
-
-      // ?? Simpan data baru (USD)
+      // Update data historis (hanya 2 harga terakhir)
       let history = oldData[symbol] || [];
       if (!Array.isArray(history)) history = [history];
-      const updated = [...history, priceUSD].slice(-2); // simpan 2 harga terakhir
-      newData[symbol] = updated;
+      newData[symbol] = [...history, priceUSD].slice(-2);
     });
 
-    // ==============================
-    // ?? FORMAT PESAN TELEGRAM
-    // ==============================
-    let message = "*?? CRYPTO PUMP ALERT (IDR)*\n\n";
-
-    const formatLine = (c, isBeruntun=false) => {
+    // FORMAT PESAN TELEGRAM
+    let msg = "*🚀 CRYPTO PUMP ALERT (IDR)*\n\n";
+    const fmtLine = (c, isBeruntun=false) => {
       const priceStr = `Rp${c.price.toLocaleString("id-ID")}`;
-      if (isBeruntun) {
-        return `*${c.symbol}* | ?? +${c.totalChange.toFixed(3)}% | Vol: Rp${c.volume.toLocaleString("id-ID")} | ${priceStr}`;
-      }
-      return `*${c.symbol}* | +${c.change} | ${priceStr}`;
+      if (isBeruntun) return `*${c.symbol}* | 🔼 +${c.totalChange.toFixed(3)}% | Vol: Rp${c.volume.toLocaleString("id-ID")} | ${priceStr}`;
+      return `*${c.symbol}* | +${c.change}% | ${priceStr}`;
     };
 
-    if (early.length > 0) {
-      message += "?? *EARLY PUMP*\n";
-      early.forEach(c => message += formatLine(c) + "\n");
-      message += "\n";
-    }
+    if (early.length) { msg += "🟢 *EARLY PUMP*\n"; early.forEach(c=>msg+=fmtLine(c)+"\n"); msg+="\n"; }
+    if (beruntun.length) { msg += "🔼 *PUMP BERUNTUN*\n"; beruntun.forEach(c=>msg+=fmtLine(c,true)+"\n"); msg+="\n"; }
+    if (big.length) { msg += "🔥 *BIG PUMP*\n"; big.forEach(c=>{ msg+=`*${c.symbol}* | +${c.change}% | Vol: Rp${c.volume.toLocaleString("id-ID")} | Rp${c.price.toLocaleString("id-ID")}\n`; }); msg+="\n"; }
 
-    if (beruntun.length > 0) {
-      message += "?? *PUMP BERUNTUN*\n";
-      beruntun.forEach(c => message += formatLine(c, true) + "\n");
-      message += "\n";
-    }
+    if (early.length + beruntun.length + big.length>0) await sendTelegram(msg);
 
-    if (big.length > 0) {
-      message += "?? *BIG PUMP*\n";
-      big.forEach(c => {
-        const priceStr = `Rp${c.price.toLocaleString("id-ID")}`;
-        message += `*${c.symbol}* | +${c.change} | Vol: Rp${c.volume.toLocaleString("id-ID")} | ${priceStr}\n`;
-      });
-      message += "\n";
-    }
+    // simpan JSON
+    fs.writeFileSync(FILE_JSON, JSON.stringify(newData,null,2));
 
-    if (early.length + beruntun.length + big.length > 0) {
-      await sendTelegram(message);
-    } else {
-      console.log("Tidak ada pump terdeteksi saat ini.");
-    }
-
-    // ?? simpan data JSON (USD)
-    fs.writeFileSync(FILE, JSON.stringify(newData, null, 2));
-
-  } catch (err) {
+  } catch(err) {
     console.error("Error:", err.message);
   }
 }
