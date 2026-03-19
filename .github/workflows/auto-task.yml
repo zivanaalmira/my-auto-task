@@ -1,9 +1,9 @@
 name: Auto Crypto Scan
 
-# Jalankan setiap 10 menit dan bisa manual trigger
+# Jalankan pada menit ke-5, 15, 25, 35, 45, 55 setiap jam
 on:
   schedule:
-    - cron: "*/10 * * * *"
+    - cron: "5,15,25,35,45,55 * * * *"
   workflow_dispatch:  # bisa dijalankan manual
 
 jobs:
