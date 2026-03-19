@@ -1,17 +1,16 @@
 name: Auto Crypto Scan
 
-# Jalankan pada menit ke-5, 15, 25, 35, 45, 55 setiap jam
 on:
   schedule:
-    - cron: "5,15,25,35,45,55 * * * *"
-  workflow_dispatch:  # bisa dijalankan manual
+    - cron: "5,15,25,35,45,55 * * * *"  # setiap 10 menit mulai dari menit ke-5
+  workflow_dispatch:  # manual trigger
 
 jobs:
   crypto-scan:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout repository
+      # 1. Checkout repo
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -31,3 +30,12 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+
+      # 5. Commit updated data.json agar persist di repo
+      - name: Commit updated data.json
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add data.json
+          git diff-index --quiet HEAD || git commit -m "Update data.json"
+          git push
