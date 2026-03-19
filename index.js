@@ -8,7 +8,7 @@ const TELEGRAM_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
 // Kurs Rupiah
-const USD_TO_IDR = 16000;
+const USD_TO_IDR = 15000;
 const BIG_PUMP_THRESHOLD = 1.05; // 5% kenaikan untuk BIG PUMP
 
 // FUNCTION TELEGRAM
@@ -46,7 +46,7 @@ async function getCrypto() {
       const symbol = c.symbol.toUpperCase();
       const priceUSD = c.current_price;
       const priceIDR = priceUSD * USD_TO_IDR;
-      const isCheap = priceIDR < USD_TO_IDR && priceIDR > 50;
+      const isCheap = priceIDR < 15000 && priceIDR > 50;
 
       // EARLY PUMP
       if (oldData[symbol]?.length >= 1) {
@@ -91,9 +91,15 @@ async function getCrypto() {
     if (beruntun.length) { msg += "🔼 *PUMP BERUNTUN*\n"; beruntun.forEach(c=>msg+=fmtLine(c,true)+"\n"); msg+="\n"; }
     if (big.length) { msg += "🔥 *BIG PUMP*\n"; big.forEach(c=>{ msg+=`*${c.symbol}* | +${c.change}% | Vol: Rp${c.volume.toLocaleString("id-ID")} | Rp${c.price.toLocaleString("id-ID")}\n`; }); msg+="\n"; }
 
-    if (early.length + beruntun.length + big.length>0) await sendTelegram(msg);
+    // Kirim Telegram jika ada pump
+    if (early.length + beruntun.length + big.length>0) {
+      await sendTelegram(msg);
+    } else {
+      // Jika tidak ada pump, tetap log di console
+      console.log("Tidak ada pump terdeteksi saat ini.");
+    }
 
-    // simpan JSON
+    // Simpan JSON
     fs.writeFileSync(FILE_JSON, JSON.stringify(newData,null,2));
 
   } catch(err) {
