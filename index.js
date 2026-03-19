@@ -80,7 +80,7 @@ async function getCrypto() {
     });
 
     // FORMAT PESAN TELEGRAM
-    let msg = "*🚀 CRYPTO PUMP ALERT (IDR)*\n\n";
+    let msg = "*🚀 CRYPTO PUMP ALERT FROM ZIVANA*\n\n";
     const fmtLine = (c, isBeruntun=false) => {
       const priceStr = `Rp${c.price.toLocaleString("id-ID")}`;
       if (isBeruntun) return `*${c.symbol}* | 🔼 +${c.totalChange.toFixed(3)}% | Vol: Rp${c.volume.toLocaleString("id-ID")} | ${priceStr}`;
