@@ -1,4 +1,4 @@
-name: Auto Crypto Scan
+name: Scan Kripto
 
 on:
   schedule:
