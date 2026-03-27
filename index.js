@@ -124,7 +124,7 @@ async function detectNearLow(data) {
   }
 
   if (results.length > 0) {
-    let msg = "*🔎 NEAR LOW ALERT*\n\n";
+    let msg = "*INDODAX | 🔎 NEAR LOW ALERT*\n\n";
 
     results.forEach(r => {
       msg += `*${r.symbol}* | Rp${Math.round(r.price).toLocaleString("id-ID")} | Low Rp${Math.round(r.low).toLocaleString("id-ID")} | Δ ${r.diff}%`;
@@ -140,7 +140,7 @@ async function detectNearLow(data) {
 
 // ================= PUMP =================
 async function detectPump(data) {
-  console.log("🚀 Scan Pump...");
+  console.log("INDODAX | 🚀 Scan Pump...");
 
   let oldData = fs.existsSync(FILE_JSON)
     ? JSON.parse(fs.readFileSync(FILE_JSON))
@@ -202,7 +202,7 @@ async function detectPump(data) {
 
 // ================= MAIN =================
 async function runBot() {
-  console.log("🚀 BOT START (ANTI 451 VERSION)");
+  console.log("INDODAX | 🚀 BOT START (ANTI 451 VERSION)");
 
   const data = await getBinanceData();
 
