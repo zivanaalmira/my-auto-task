@@ -57,7 +57,12 @@ async function sendTelegram(message) {
 async function fetchWithRetry(url, retries = RETRIES) {
   for (let i = 0; i <= retries; i++) {
     try {
-      return await axios.get(url, { timeout: 10000 });
+      return await axios.get(url, {
+        timeout: 10000,
+        headers: {
+          "User-Agent": "Mozilla/5.0"
+        }
+      });
     } catch (err) {
       if (i < retries) {
         console.warn(`⚠️ Retry ${i + 1}/${retries}`);
@@ -69,10 +74,17 @@ async function fetchWithRetry(url, retries = RETRIES) {
   }
 }
 
-// ================= GET BINANCE =================
+// ================= GET BINANCE (ANTI 451) =================
 async function getBinanceData() {
-  const res = await fetchWithRetry("https://api.binance.com/api/v3/ticker/24hr");
-  return res.data;
+  try {
+    console.log("🌐 Ambil data Binance utama...");
+    const res = await fetchWithRetry("https://api.binance.com/api/v3/ticker/24hr");
+    return res.data;
+  } catch (err) {
+    console.warn("⚠️ Binance utama gagal (kemungkinan 451), pakai backup...");
+    const res = await fetchWithRetry("https://data-api.binance.vision/api/v3/ticker/24hr");
+    return res.data;
+  }
 }
 
 // ================= NEAR LOW =================
@@ -85,7 +97,10 @@ async function detectNearLow(data) {
     const pair = symbol + "USDT";
 
     const market = data.find(d => d.symbol === pair);
-    if (!market) continue;
+    if (!market) {
+      console.log(`⏭️ Skip ${symbol} (tidak ada di Binance)`);
+      continue;
+    }
 
     const price = parseFloat(market.lastPrice);
     const low = parseFloat(market.lowPrice);
@@ -187,7 +202,7 @@ async function detectPump(data) {
 
 // ================= MAIN =================
 async function runBot() {
-  console.log("🚀 BOT START (FULL VERSION)");
+  console.log("🚀 BOT START (ANTI 451 VERSION)");
 
   const data = await getBinanceData();
 
