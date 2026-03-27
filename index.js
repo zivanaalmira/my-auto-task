@@ -1,110 +1,206 @@
 const axios = require("axios");
 const fs = require("fs");
 
+// ================= CONFIG =================
 const FILE_JSON = "data.json";
+const COINS_FILE = "indodaxCoins.json";
 
-// Telegram config dari GitHub Secrets
 const TELEGRAM_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
-// Kurs Rupiah
 const USD_TO_IDR = 15000;
-const BIG_PUMP_THRESHOLD = 1.05; // 5% kenaikan untuk BIG PUMP
 
-// FUNCTION TELEGRAM
+// Near Low
+const MAX_PRICE_IDR = 30000;
+const DIFF_MIN = 0;
+const DIFF_MAX = 1;
+
+// Pump
+const LOOP_MINI = 2;
+const DELAY_SCAN = 20000;
+const MIN_CHANGE = 0.3;
+const MAX_VOLUME = 5000000000;
+
+// Retry
+const RETRIES = 3;
+const RETRY_DELAY = 5000;
+
+// ================= LOAD COINS =================
+let coins = [];
+if (fs.existsSync(COINS_FILE)) {
+  coins = JSON.parse(fs.readFileSync(COINS_FILE));
+} else {
+  console.error("❌ indodaxCoins.json tidak ditemukan");
+  process.exit(1);
+}
+
+// ================= UTIL =================
+const delay = ms => new Promise(res => setTimeout(res, ms));
+
+// ================= TELEGRAM =================
 async function sendTelegram(message) {
   if (!TELEGRAM_TOKEN || !CHAT_ID) return;
-  const url = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
+
   try {
-    await axios.post(url, {
+    await axios.post(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
       chat_id: CHAT_ID,
       text: message,
       parse_mode: "Markdown"
     });
-    console.log("✅ Pesan Telegram terkirim");
+    console.log("✅ Telegram terkirim");
   } catch (err) {
-    console.error("❌ Error Telegram:", err.response?.data || err.message);
+    console.error("❌ Telegram error:", err.message);
   }
 }
 
-// MAIN FUNCTION
-async function getCrypto() {
-  try {
-    const res = await axios.get("https://api.coingecko.com/api/v3/coins/markets", {
-      params: { vs_currency: "usd", order: "market_cap_desc", per_page: 100, page: 2 },
-      timeout: 10000
+// ================= FETCH WITH RETRY =================
+async function fetchWithRetry(url, retries = RETRIES) {
+  for (let i = 0; i <= retries; i++) {
+    try {
+      return await axios.get(url, { timeout: 10000 });
+    } catch (err) {
+      if (i < retries) {
+        console.warn(`⚠️ Retry ${i + 1}/${retries}`);
+        await delay(RETRY_DELAY);
+      } else {
+        throw err;
+      }
+    }
+  }
+}
+
+// ================= GET BINANCE =================
+async function getBinanceData() {
+  const res = await fetchWithRetry("https://api.binance.com/api/v3/ticker/24hr");
+  return res.data;
+}
+
+// ================= NEAR LOW =================
+async function detectNearLow(data) {
+  console.log("🔎 Scan Near Low...");
+  let results = [];
+
+  for (let coin of coins) {
+    const symbol = coin.symbol.toUpperCase();
+    const pair = symbol + "USDT";
+
+    const market = data.find(d => d.symbol === pair);
+    if (!market) continue;
+
+    const price = parseFloat(market.lastPrice);
+    const low = parseFloat(market.lowPrice);
+
+    const priceIDR = price * USD_TO_IDR;
+    const lowIDR = low * USD_TO_IDR;
+
+    if (priceIDR > MAX_PRICE_IDR) continue;
+
+    const diff = ((price - low) / low) * 100;
+
+    if (diff >= DIFF_MIN && diff <= DIFF_MAX) {
+      results.push({
+        symbol,
+        price: priceIDR,
+        low: lowIDR,
+        diff: diff.toFixed(2),
+        below: price <= low
+      });
+    }
+  }
+
+  if (results.length > 0) {
+    let msg = "*🔎 NEAR LOW ALERT*\n\n";
+
+    results.forEach(r => {
+      msg += `*${r.symbol}* | Rp${Math.round(r.price).toLocaleString("id-ID")} | Low Rp${Math.round(r.low).toLocaleString("id-ID")} | Δ ${r.diff}%`;
+      if (r.below) msg += " 💥";
+      msg += "\n";
     });
 
-    // Load data lama
-    let oldData = {};
-    if (fs.existsSync(FILE_JSON)) oldData = JSON.parse(fs.readFileSync(FILE_JSON));
+    await sendTelegram(msg);
+  } else {
+    console.log("⚠️ Tidak ada near low");
+  }
+}
 
-    let newData = {};
-    let early = [], beruntun = [], big = [];
+// ================= PUMP =================
+async function detectPump(data) {
+  console.log("🚀 Scan Pump...");
 
-    res.data.forEach(c => {
-      const symbol = c.symbol.toUpperCase();
-      const priceUSD = c.current_price;
-      const priceIDR = priceUSD * USD_TO_IDR;
-      const isCheap = priceIDR < 15000 && priceIDR > 50;
+  let oldData = fs.existsSync(FILE_JSON)
+    ? JSON.parse(fs.readFileSync(FILE_JSON))
+    : {};
 
-      // EARLY PUMP
-      if (oldData[symbol]?.length >= 1) {
-        const oldPrice = oldData[symbol].slice(-1)[0];
-        const change = oldPrice > 0 ? parseFloat(((priceUSD - oldPrice)/oldPrice*100).toFixed(3)) : 0;
-        if (isCheap && change >= 0.1 && change < 0.5) early.push({ symbol, change, price: priceIDR });
+  let newData = {};
+  let signals = [];
+
+  for (let coin of coins) {
+    const symbol = coin.symbol.toUpperCase();
+    const pair = symbol + "USDT";
+
+    const market = data.find(d => d.symbol === pair);
+    if (!market) continue;
+
+    const price = parseFloat(market.lastPrice);
+    const volume = parseFloat(market.quoteVolume);
+
+    if (volume > MAX_VOLUME) continue;
+
+    let history = oldData[symbol] || [];
+
+    if (history.length >= 1) {
+      const prev = history[history.length - 1];
+      const change = ((price - prev.price) / prev.price) * 100;
+
+      let emoji = "";
+
+      if (change >= 0.3 && change < 1) emoji = "🟢";
+      else if (change >= 1 && change < 3) emoji = "🚀";
+      else if (change >= 3) emoji = "🔥";
+
+      if (emoji) {
+        signals.push({
+          symbol,
+          change: change.toFixed(2),
+          price: price * USD_TO_IDR
+        });
       }
-
-      // PUMP BERUNTUN
-      if (oldData[symbol]?.length === 2) {
-        const [p20, p10] = oldData[symbol];
-        const ch1 = p20>0 ? parseFloat(((p10 - p20)/p20*100).toFixed(3)) : 0;
-        const ch2 = p10>0 ? parseFloat(((priceUSD - p10)/p10*100).toFixed(3)) : 0;
-        const totalChange = ch1 + ch2;
-        if (isCheap && ch1>0.15 && ch2>0.15 && c.total_volume*USD_TO_IDR>500000000 && c.price_change_percentage_24h>0) {
-          beruntun.push({ symbol, change1: ch1, change2: ch2, totalChange, price: priceIDR, volume: c.total_volume*USD_TO_IDR });
-        }
-      }
-
-      // BIG PUMP
-      if (isCheap && oldData[symbol]?.length>=2 && priceUSD > BIG_PUMP_THRESHOLD*oldData[symbol][0] && c.total_volume*USD_TO_IDR>1000000000 && c.price_change_percentage_24h>0) {
-        const oldPrice = oldData[symbol][0];
-        const change = ((priceUSD - oldPrice)/oldPrice*100).toFixed(3);
-        big.push({ symbol, price: priceIDR, volume: c.total_volume*USD_TO_IDR, change });
-      }
-
-      // Update data historis (hanya 2 harga terakhir)
-      let history = oldData[symbol] || [];
-      if (!Array.isArray(history)) history = [history];
-      newData[symbol] = [...history, priceUSD].slice(-2);
-    });
-
-    // FORMAT PESAN TELEGRAM
-    let msg = "*🚀 CRYPTO PUMP ALERT FROM ZIVANA*\n\n";
-    const fmtLine = (c, isBeruntun=false) => {
-      const priceStr = `Rp${c.price.toLocaleString("id-ID")}`;
-      if (isBeruntun) return `*${c.symbol}* | 🔼 +${c.totalChange.toFixed(3)}% | Vol: Rp${c.volume.toLocaleString("id-ID")} | ${priceStr}`;
-      return `*${c.symbol}* | +${c.change}% | ${priceStr}`;
-    };
-
-    if (early.length) { msg += "🟢 *EARLY PUMP*\n"; early.forEach(c=>msg+=fmtLine(c)+"\n"); msg+="\n"; }
-    if (beruntun.length) { msg += "🔼 *PUMP BERUNTUN*\n"; beruntun.forEach(c=>msg+=fmtLine(c,true)+"\n"); msg+="\n"; }
-    if (big.length) { msg += "🔥 *BIG PUMP*\n"; big.forEach(c=>{ msg+=`*${c.symbol}* | +${c.change}% | Vol: Rp${c.volume.toLocaleString("id-ID")} | Rp${c.price.toLocaleString("id-ID")}\n`; }); msg+="\n"; }
-
-    // Kirim Telegram jika ada pump
-    if (early.length + beruntun.length + big.length>0) {
-      await sendTelegram(msg);
-    } else {
-      // Jika tidak ada pump, tetap log di console
-      console.log("Tidak ada pump terdeteksi saat ini.");
     }
 
-    // Simpan JSON
-    fs.writeFileSync(FILE_JSON, JSON.stringify(newData,null,2));
-
-  } catch(err) {
-    console.error("Error:", err.message);
+    newData[symbol] = [...history, { price, volume }].slice(-2);
   }
+
+  if (signals.length > 0) {
+    let msg = "*🚀 PUMP SIGNAL*\n\n";
+
+    signals.slice(0, 10).forEach(s => {
+      msg += `${s.symbol} | +${s.change}% | Rp${Math.round(s.price).toLocaleString("id-ID")}\n`;
+    });
+
+    await sendTelegram(msg);
+  } else {
+    console.log("⚠️ Tidak ada pump");
+  }
+
+  fs.writeFileSync(FILE_JSON, JSON.stringify(newData, null, 2));
 }
 
-getCrypto();
+// ================= MAIN =================
+async function runBot() {
+  console.log("🚀 BOT START (FULL VERSION)");
+
+  const data = await getBinanceData();
+
+  await detectNearLow(data);
+
+  for (let i = 1; i <= LOOP_MINI; i++) {
+    console.log(`⏱️ Pump loop ${i}`);
+    await detectPump(data);
+
+    if (i < LOOP_MINI) await delay(DELAY_SCAN);
+  }
+
+  console.log("✅ Selesai");
+}
+
+runBot();
