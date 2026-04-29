@@ -8,7 +8,7 @@ const COINS_FILE = "indodaxCoins.json";
 const TELEGRAM_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
-const USD_TO_IDR = 15000;
+const USD_TO_IDR = 17000;
 
 // Near Low
 const MAX_PRICE_IDR = 30000;
@@ -124,7 +124,7 @@ async function detectNearLow(data) {
   }
 
   if (results.length > 0) {
-    let msg = "*INDODAX | 🔎 NEAR LOW ALERT*\n\n";
+    let msg = "*INDODAX | 🔎 MENUJU HARGA RENDAH*\n\n";
 
     results.forEach(r => {
       msg += `*${r.symbol}* | Rp${Math.round(r.price).toLocaleString("id-ID")} | Low Rp${Math.round(r.low).toLocaleString("id-ID")} | Δ ${r.diff}%`;
