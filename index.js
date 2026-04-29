@@ -8,8 +8,6 @@ const COINS_FILE = "indodaxCoins.json";
 const TELEGRAM_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
-const USD_TO_IDR = 17000;
-
 // Near Low
 const MAX_PRICE_IDR = 30000;
 const DIFF_MIN = 0;
@@ -59,9 +57,7 @@ async function fetchWithRetry(url, retries = RETRIES) {
     try {
       return await axios.get(url, {
         timeout: 10000,
-        headers: {
-          "User-Agent": "Mozilla/5.0"
-        }
+        headers: { "User-Agent": "Mozilla/5.0" }
       });
     } catch (err) {
       if (i < retries) {
@@ -74,16 +70,15 @@ async function fetchWithRetry(url, retries = RETRIES) {
   }
 }
 
-// ================= GET BINANCE (ANTI 451) =================
-async function getBinanceData() {
+// ================= GET INDODAX DATA =================
+async function getIndodaxData() {
   try {
-    console.log("🌐 Ambil data Binance utama...");
-    const res = await fetchWithRetry("https://api.binance.com/api/v3/ticker/24hr");
-    return res.data;
+    console.log("🌐 Ambil data Indodax...");
+    const res = await fetchWithRetry("https://indodax.com/api/tickers");
+    return res.data.tickers;
   } catch (err) {
-    console.warn("⚠️ Binance utama gagal (kemungkinan 451), pakai backup...");
-    const res = await fetchWithRetry("https://data-api.binance.vision/api/v3/ticker/24hr");
-    return res.data;
+    console.error("❌ Gagal ambil data:", err.message);
+    return {};
   }
 }
 
@@ -93,30 +88,26 @@ async function detectNearLow(data) {
   let results = [];
 
   for (let coin of coins) {
-    const symbol = coin.symbol.toUpperCase();
-    const pair = symbol + "USDT";
+    const pair = coin.symbol.toLowerCase() + "_idr";
+    const market = data[pair];
 
-    const market = data.find(d => d.symbol === pair);
     if (!market) {
-      console.log(`⏭️ Skip ${symbol} (tidak ada di Binance)`);
+      console.log(`⏭️ Skip ${coin.symbol}`);
       continue;
     }
 
-    const price = parseFloat(market.lastPrice);
-    const low = parseFloat(market.lowPrice);
+    const price = parseFloat(market.last);
+    const low = parseFloat(market.low);
 
-    const priceIDR = price * USD_TO_IDR;
-    const lowIDR = low * USD_TO_IDR;
-
-    if (priceIDR > MAX_PRICE_IDR) continue;
+    if (price > MAX_PRICE_IDR) continue;
 
     const diff = ((price - low) / low) * 100;
 
     if (diff >= DIFF_MIN && diff <= DIFF_MAX) {
       results.push({
-        symbol,
-        price: priceIDR,
-        low: lowIDR,
+        symbol: coin.symbol,
+        price,
+        low,
         diff: diff.toFixed(2),
         below: price <= low
       });
@@ -140,7 +131,7 @@ async function detectNearLow(data) {
 
 // ================= PUMP =================
 async function detectPump(data) {
-  console.log("INDODAX | 🚀 Scan Pump...");
+  console.log("🚀 Scan Pump...");
 
   let oldData = fs.existsSync(FILE_JSON)
     ? JSON.parse(fs.readFileSync(FILE_JSON))
@@ -150,18 +141,17 @@ async function detectPump(data) {
   let signals = [];
 
   for (let coin of coins) {
-    const symbol = coin.symbol.toUpperCase();
-    const pair = symbol + "USDT";
+    const pair = coin.symbol.toLowerCase() + "_idr";
+    const market = data[pair];
 
-    const market = data.find(d => d.symbol === pair);
     if (!market) continue;
 
-    const price = parseFloat(market.lastPrice);
-    const volume = parseFloat(market.quoteVolume);
+    const price = parseFloat(market.last);
+    const volume = parseFloat(market.vol_idr);
 
     if (volume > MAX_VOLUME) continue;
 
-    let history = oldData[symbol] || [];
+    let history = oldData[coin.symbol] || [];
 
     if (history.length >= 1) {
       const prev = history[history.length - 1];
@@ -169,24 +159,24 @@ async function detectPump(data) {
 
       let emoji = "";
 
-      if (change >= 0.3 && change < 1) emoji = "🟢";
+      if (change >= MIN_CHANGE && change < 1) emoji = "🟢";
       else if (change >= 1 && change < 3) emoji = "🚀";
       else if (change >= 3) emoji = "🔥";
 
       if (emoji) {
         signals.push({
-          symbol,
+          symbol: coin.symbol,
           change: change.toFixed(2),
-          price: price * USD_TO_IDR
+          price
         });
       }
     }
 
-    newData[symbol] = [...history, { price, volume }].slice(-2);
+    newData[coin.symbol] = [...history, { price, volume }].slice(-2);
   }
 
   if (signals.length > 0) {
-    let msg = "*🚀 PUMP SIGNAL*\n\n";
+    let msg = "*🚀 PUMP SIGNAL (INDODAX)*\n\n";
 
     signals.slice(0, 10).forEach(s => {
       msg += `${s.symbol} | +${s.change}% | Rp${Math.round(s.price).toLocaleString("id-ID")}\n`;
@@ -202,9 +192,9 @@ async function detectPump(data) {
 
 // ================= MAIN =================
 async function runBot() {
-  console.log("INDODAX | 🚀 BOT START (ANTI 451 VERSION)");
+  console.log("🚀 BOT START (FULL INDODAX)");
 
-  const data = await getBinanceData();
+  const data = await getIndodaxData();
 
   await detectNearLow(data);
 
