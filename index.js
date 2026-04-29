@@ -176,7 +176,7 @@ async function detectPump(data) {
   }
 
   if (signals.length > 0) {
-    let msg = "*🚀 PUMP SIGNAL (INDODAX)*\n\n";
+    let msg = "*🚀 SINYAL NAIK *\n\n";
 
     signals.slice(0, 10).forEach(s => {
       msg += `${s.symbol} | +${s.change}% | Rp${Math.round(s.price).toLocaleString("id-ID")}\n`;
