@@ -16,8 +16,8 @@ const DIFF_MAX = 0.5;
 // Pump
 const LOOP_MINI = 2;
 const DELAY_SCAN = 20000;
-const MIN_CHANGE = 0.3;
-const MAX_VOLUME = 5000000000;
+const MIN_CHANGE = 0.5;
+const MAX_VOLUME = 15000000000;
 
 // Retry
 const RETRIES = 3;
@@ -149,7 +149,7 @@ async function detectPump(data) {
     const price = parseFloat(market.last);
     const volume = parseFloat(market.vol_idr);
 
-    if (volume > MAX_VOLUME) continue;
+   // if (volume > MAX_VOLUME) continue;
 
     let history = oldData[coin.symbol] || [];
 
