@@ -11,12 +11,12 @@ const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 // Near Low
 const MAX_PRICE_IDR = 30000;
 const DIFF_MIN = -10;
-const DIFF_MAX = 0.5;
+const DIFF_MAX = 0.35;
 
 // Pump
 const LOOP_MINI = 2;
 const DELAY_SCAN = 20000;
-const MIN_CHANGE = 0.5;
+const MIN_CHANGE = 0.75;
 const MAX_VOLUME = 15000000000;
 
 // Retry
@@ -159,9 +159,9 @@ async function detectPump(data) {
 
       let emoji = "";
 
-      if (change >= MIN_CHANGE && change < 1) emoji = "🟢";
-      else if (change >= 1 && change < 3) emoji = "🚀";
-      else if (change >= 3) emoji = "🔥";
+      if (change >= MIN_CHANGE && change < 2) emoji = "🟢";
+      else if (change >= 2 && change < 5) emoji = "🚀";
+      else if (change >= 5) emoji = "🔥";
 
       if (emoji) {
         signals.push({
