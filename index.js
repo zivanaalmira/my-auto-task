@@ -10,8 +10,8 @@ const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
 // Near Low
 const MAX_PRICE_IDR = 30000;
-const DIFF_MIN = 0;
-const DIFF_MAX = 1;
+const DIFF_MIN = -10;
+const DIFF_MAX = 0.5;
 
 // Pump
 const LOOP_MINI = 2;
