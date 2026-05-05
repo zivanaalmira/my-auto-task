@@ -2,11 +2,11 @@
   "DENT": [
     {
       "price": 1,
-      "volume": 8703180
+      "volume": 9772818
     },
     {
       "price": 1,
-      "volume": 8703180
+      "volume": 9772818
     }
   ],
   "SPELL": [
@@ -21,162 +21,162 @@
   ],
   "LUNC": [
     {
-      "price": 1.748987,
-      "volume": 1718748630
+      "price": 1.710224,
+      "volume": 1673812871
     },
     {
-      "price": 1.748987,
-      "volume": 1718748630
+      "price": 1.710224,
+      "volume": 1673812871
     }
   ],
   "BIO": [
     {
-      "price": 922,
-      "volume": 629510638
+      "price": 934,
+      "volume": 615390006
     },
     {
-      "price": 922,
-      "volume": 629510638
+      "price": 934,
+      "volume": 615390006
     }
   ],
   "PIPPIN": [
     {
-      "price": 443.189,
-      "volume": 6016101351
+      "price": 440,
+      "volume": 5702609768
     },
     {
-      "price": 443.189,
-      "volume": 6016101351
+      "price": 440,
+      "volume": 5702609768
     }
   ],
   "RSS3": [
     {
-      "price": 135,
-      "volume": 1805573138
+      "price": 131,
+      "volume": 1935873036
     },
     {
-      "price": 135,
-      "volume": 1805573138
+      "price": 131,
+      "volume": 1935873036
     }
   ],
   "CTSI": [
     {
-      "price": 584,
-      "volume": 22556313
+      "price": 581,
+      "volume": 24696615
     },
     {
-      "price": 584,
-      "volume": 22556313
+      "price": 581,
+      "volume": 24696615
     }
   ],
   "ZEREBRO": [
     {
-      "price": 597,
-      "volume": 26072732189
+      "price": 512,
+      "volume": 27525156802
     },
     {
-      "price": 597,
-      "volume": 26072732189
+      "price": 512,
+      "volume": 27525156802
     }
   ],
   "CKB": [
     {
       "price": 26,
-      "volume": 16805785
+      "volume": 14045366
     },
     {
       "price": 26,
-      "volume": 16805785
+      "volume": 14045366
     }
   ],
   "GRIFFAIN": [
     {
       "price": 310.952,
-      "volume": 28802476
+      "volume": 28769666
     },
     {
       "price": 310.952,
-      "volume": 28802476
+      "volume": 28769666
     }
   ],
   "MUBARAK": [
     {
-      "price": 280.282,
-      "volume": 2064135435
+      "price": 280.951,
+      "volume": 2083909978
     },
     {
-      "price": 280.282,
-      "volume": 2064135435
+      "price": 280.951,
+      "volume": 2083909978
     }
   ],
   "RDNT": [
     {
       "price": 32,
-      "volume": 41513846
+      "volume": 39717957
     },
     {
       "price": 32,
-      "volume": 41513846
+      "volume": 39717957
     }
   ],
   "SKYA": [
     {
       "price": 12,
-      "volume": 15711893
+      "volume": 16609350
     },
     {
       "price": 12,
-      "volume": 15711893
+      "volume": 16609350
     }
   ],
   "NFP": [
     {
-      "price": 229,
-      "volume": 464200535
+      "price": 227,
+      "volume": 468819791
     },
     {
-      "price": 229,
-      "volume": 464200535
+      "price": 227,
+      "volume": 468819791
     }
   ],
   "AIXBT": [
     {
-      "price": 600,
-      "volume": 56921043
+      "price": 586,
+      "volume": 56589528
     },
     {
-      "price": 600,
-      "volume": 56921043
+      "price": 586,
+      "volume": 56589528
     }
   ],
   "AEVO": [
     {
       "price": 490,
-      "volume": 7333863
+      "volume": 7291495
     },
     {
       "price": 490,
-      "volume": 7333863
+      "volume": 7291495
     }
   ],
   "TROLLSOL": [
     {
-      "price": 848,
-      "volume": 9594201297
+      "price": 827.98,
+      "volume": 9078625430
     },
     {
-      "price": 848,
-      "volume": 9594201297
+      "price": 827.98,
+      "volume": 9078625430
     }
   ],
   "DOGS": [
     {
-      "price": 1.229,
-      "volume": 4488981999
+      "price": 1.187,
+      "volume": 4893798048
     },
     {
-      "price": 1.229,
-      "volume": 4488981999
+      "price": 1.187,
+      "volume": 4893798048
     }
   ],
   "BMT": [
@@ -191,92 +191,92 @@
   ],
   "PENGU": [
     {
-      "price": 188.186,
-      "volume": 3751009085
+      "price": 193.801,
+      "volume": 4057370212
     },
     {
-      "price": 188.186,
-      "volume": 3751009085
+      "price": 193.801,
+      "volume": 4057370212
     }
   ],
   "CGPT": [
     {
-      "price": 482,
-      "volume": 29849697
+      "price": 487,
+      "volume": 29719510
     },
     {
-      "price": 482,
-      "volume": 29849697
+      "price": 487,
+      "volume": 29719510
     }
   ],
   "STO": [
     {
-      "price": 1534,
-      "volume": 354045362
+      "price": 1533,
+      "volume": 360648035
     },
     {
-      "price": 1534,
-      "volume": 354045362
+      "price": 1533,
+      "volume": 360648035
     }
   ],
   "FUN": [
     {
-      "price": 8.316,
-      "volume": 205776199
+      "price": 8.559,
+      "volume": 185080518
     },
     {
-      "price": 8.316,
-      "volume": 205776199
+      "price": 8.559,
+      "volume": 185080518
     }
   ],
   "ATH": [
     {
-      "price": 109,
-      "volume": 14157515
+      "price": 107,
+      "volume": 24702668
     },
     {
-      "price": 109,
-      "volume": 14157515
+      "price": 107,
+      "volume": 24702668
     }
   ],
   "L3": [
     {
-      "price": 194,
-      "volume": 146668951
+      "price": 186,
+      "volume": 150338122
     },
     {
-      "price": 194,
-      "volume": 146668951
+      "price": 186,
+      "volume": 150338122
     }
   ],
   "SUNDOG": [
     {
-      "price": 86,
-      "volume": 149678869
+      "price": 88,
+      "volume": 150456031
     },
     {
-      "price": 86,
-      "volume": 149678869
+      "price": 88,
+      "volume": 150456031
     }
   ],
   "CELR": [
     {
       "price": 49,
-      "volume": 2069180
+      "volume": 2058227
     },
     {
       "price": 49,
-      "volume": 2069180
+      "volume": 2058227
     }
   ],
   "SPK": [
     {
-      "price": 625,
-      "volume": 2845884
+      "price": 627,
+      "volume": 2796946
     },
     {
-      "price": 625,
-      "volume": 2845884
+      "price": 627,
+      "volume": 2796946
     }
   ],
   "LRC": [
@@ -301,62 +301,62 @@
   ],
   "CHILLGUY": [
     {
-      "price": 315,
-      "volume": 1351285699
+      "price": 304,
+      "volume": 1072949595
     },
     {
-      "price": 315,
-      "volume": 1351285699
+      "price": 304,
+      "volume": 1072949595
     }
   ],
   "CHR": [
     {
       "price": 453,
-      "volume": 5032384
+      "volume": 4789464
     },
     {
       "price": 453,
-      "volume": 5032384
+      "volume": 4789464
     }
   ],
   "ACH": [
     {
-      "price": 131,
-      "volume": 10154975
+      "price": 136,
+      "volume": 22099488
     },
     {
-      "price": 131,
-      "volume": 10154975
+      "price": 136,
+      "volume": 22099488
     }
   ],
   "NOM": [
     {
-      "price": 43.577,
-      "volume": 148052334
+      "price": 43.897,
+      "volume": 188926080
     },
     {
-      "price": 43.577,
-      "volume": 148052334
+      "price": 43.897,
+      "volume": 188926080
     }
   ],
   "RSR": [
     {
       "price": 33,
-      "volume": 14582183
+      "volume": 14629942
     },
     {
       "price": 33,
-      "volume": 14582183
+      "volume": 14629942
     }
   ],
   "HUMA": [
     {
       "price": 375,
-      "volume": 27924567
+      "volume": 27942192
     },
     {
       "price": 375,
-      "volume": 27924567
+      "volume": 27942192
     }
   ],
   "HFT": [
@@ -371,142 +371,142 @@
   ],
   "MOG": [
     {
-      "price": 0.002797,
-      "volume": 107117884
+      "price": 0.00279,
+      "volume": 109048759
     },
     {
-      "price": 0.002797,
-      "volume": 107117884
+      "price": 0.00279,
+      "volume": 109048759
     }
   ],
   "PRCL": [
     {
       "price": 226,
-      "volume": 14758079
+      "volume": 11352976
     },
     {
       "price": 226,
-      "volume": 14758079
+      "volume": 11352976
     }
   ],
   "BANANA": [
     {
-      "price": 72005,
-      "volume": 6465466
+      "price": 72544,
+      "volume": 7045455
     },
     {
-      "price": 72005,
-      "volume": 6465466
+      "price": 72544,
+      "volume": 7045455
     }
   ],
   "PEOPLE": [
     {
-      "price": 157,
-      "volume": 30106553
+      "price": 147,
+      "volume": 35456669
     },
     {
-      "price": 157,
-      "volume": 30106553
+      "price": 147,
+      "volume": 35456669
     }
   ],
   "MEW": [
     {
-      "price": 10.86,
-      "volume": 47695894
+      "price": 11.04,
+      "volume": 48755503
     },
     {
-      "price": 10.86,
-      "volume": 47695894
+      "price": 11.04,
+      "volume": 48755503
     }
   ],
   "STIK": [
     {
-      "price": 4176,
-      "volume": 2733110
+      "price": 4150,
+      "volume": 2859256
     },
     {
-      "price": 4176,
-      "volume": 2733110
+      "price": 4150,
+      "volume": 2859256
     }
   ],
   "BOME": [
     {
       "price": 10,
-      "volume": 150420421
+      "volume": 153680618
     },
     {
       "price": 10,
-      "volume": 150420421
+      "volume": 153680618
     }
   ],
   "KOMA": [
     {
-      "price": 128.041,
-      "volume": 12797567
+      "price": 136,
+      "volume": 12655292
     },
     {
-      "price": 128.041,
-      "volume": 12797567
+      "price": 136,
+      "volume": 12655292
     }
   ],
   "VINE": [
     {
       "price": 261,
-      "volume": 4095946
+      "volume": 3996158
     },
     {
       "price": 261,
-      "volume": 4095946
+      "volume": 3996158
     }
   ],
   "PEPE": [
     {
-      "price": 0.070862,
-      "volume": 2801400710
+      "price": 0.070863,
+      "volume": 2882716778
     },
     {
-      "price": 0.070862,
-      "volume": 2801400710
+      "price": 0.070863,
+      "volume": 2882716778
     }
   ],
   "PIXEL": [
     {
-      "price": 140,
-      "volume": 25203950
+      "price": 137,
+      "volume": 25666738
     },
     {
-      "price": 140,
-      "volume": 25203950
+      "price": 137,
+      "volume": 25666738
     }
   ],
   "IOTX": [
     {
       "price": 80,
-      "volume": 31932914
+      "volume": 40923285
     },
     {
       "price": 80,
-      "volume": 31932914
+      "volume": 40923285
     }
   ],
   "KMNO": [
     {
-      "price": 353,
-      "volume": 5187298
+      "price": 351,
+      "volume": 7117761
     },
     {
-      "price": 353,
-      "volume": 5187298
+      "price": 351,
+      "volume": 7117761
     }
   ],
   "PONKE": [
     {
       "price": 487,
-      "volume": 43972968
+      "volume": 44514626
     },
     {
       "price": 487,
-      "volume": 43972968
+      "volume": 44514626
     }
   ],
   "HAEDAL": [
@@ -522,61 +522,61 @@
   "SHELL": [
     {
       "price": 662,
-      "volume": 3419209
+      "volume": 3309345
     },
     {
       "price": 662,
-      "volume": 3419209
+      "volume": 3309345
     }
   ],
   "ZKJ": [
     {
-      "price": 212,
-      "volume": 2216704647
+      "price": 211,
+      "volume": 2276952034
     },
     {
-      "price": 212,
-      "volume": 2216704647
+      "price": 211,
+      "volume": 2276952034
     }
   ],
   "GIGA": [
     {
       "price": 37,
-      "volume": 2890295687
+      "volume": 2484648563
     },
     {
       "price": 37,
-      "volume": 2890295687
+      "volume": 2484648563
     }
   ],
   "BRETT": [
     {
-      "price": 139,
-      "volume": 23543444
+      "price": 138,
+      "volume": 25709852
     },
     {
-      "price": 139,
-      "volume": 23543444
+      "price": 138,
+      "volume": 25709852
     }
   ],
   "GOAT": [
     {
-      "price": 338,
-      "volume": 272509232
+      "price": 340,
+      "volume": 276559689
     },
     {
-      "price": 338,
-      "volume": 272509232
+      "price": 340,
+      "volume": 276559689
     }
   ],
   "TURBO": [
     {
-      "price": 23.29,
-      "volume": 176917302
+      "price": 22.71,
+      "volume": 192960354
     },
     {
-      "price": 23.29,
-      "volume": 176917302
+      "price": 22.71,
+      "volume": 192960354
     }
   ],
   "BICO": [
@@ -591,132 +591,132 @@
   ],
   "PUMP": [
     {
-      "price": 32.006,
-      "volume": 39961927
+      "price": 32.005,
+      "volume": 37571310
     },
     {
-      "price": 32.006,
-      "volume": 39961927
+      "price": 32.005,
+      "volume": 37571310
     }
   ],
   "CHEEMS": [
     {
-      "price": 0.01101,
-      "volume": 3198979
+      "price": 0.011187,
+      "volume": 3225699
     },
     {
-      "price": 0.01101,
-      "volume": 3198979
+      "price": 0.011187,
+      "volume": 3225699
     }
   ],
   "RFC": [
     {
-      "price": 10.102,
-      "volume": 38793498
+      "price": 10.001,
+      "volume": 42123205
     },
     {
-      "price": 10.102,
-      "volume": 38793498
+      "price": 10.001,
+      "volume": 42123205
     }
   ],
   "FLOKI": [
     {
-      "price": 0.572447,
-      "volume": 86591936
+      "price": 0.578999,
+      "volume": 91857309
     },
     {
-      "price": 0.572447,
-      "volume": 86591936
+      "price": 0.578999,
+      "volume": 91857309
     }
   ],
   "SOLV": [
     {
-      "price": 77.415,
-      "volume": 30475330
+      "price": 77.154,
+      "volume": 16426140
     },
     {
-      "price": 77.415,
-      "volume": 30475330
+      "price": 77.154,
+      "volume": 16426140
     }
   ],
   "HOT": [
     {
-      "price": 8,
-      "volume": 740729
+      "price": 7,
+      "volume": 987606
     },
     {
-      "price": 8,
-      "volume": 740729
+      "price": 7,
+      "volume": 987606
     }
   ],
   "SKL": [
     {
       "price": 122,
-      "volume": 1639741
+      "volume": 1619202
     },
     {
       "price": 122,
-      "volume": 1639741
+      "volume": 1619202
     }
   ],
   "AMP": [
     {
-      "price": 16,
-      "volume": 1624525
+      "price": 15,
+      "volume": 1663152
     },
     {
-      "price": 16,
-      "volume": 1624525
+      "price": 15,
+      "volume": 1663152
     }
   ],
   "SAHARA": [
     {
       "price": 424,
-      "volume": 6364682
+      "volume": 7748893
     },
     {
       "price": 424,
-      "volume": 6364682
+      "volume": 7748893
     }
   ],
   "NPC": [
     {
       "price": 131,
-      "volume": 2981193
+      "volume": 2889906
     },
     {
       "price": 131,
-      "volume": 2981193
+      "volume": 2889906
     }
   ],
   "DGB": [
     {
-      "price": 68,
-      "volume": 32008424
+      "price": 67,
+      "volume": 32891351
     },
     {
-      "price": 68,
-      "volume": 32008424
+      "price": 67,
+      "volume": 32891351
     }
   ],
   "XEM": [
     {
-      "price": 10,
-      "volume": 168967733
+      "price": 11,
+      "volume": 169341719
     },
     {
-      "price": 10,
-      "volume": 168967733
+      "price": 11,
+      "volume": 169341719
     }
   ],
   "DEGEN": [
     {
       "price": 12,
-      "volume": 19244337
+      "volume": 19472733
     },
     {
       "price": 12,
-      "volume": 19244337
+      "volume": 19472733
     }
   ],
   "MOCA": [
@@ -741,22 +741,22 @@
   ],
   "MEME": [
     {
-      "price": 11,
-      "volume": 136777795
+      "price": 10,
+      "volume": 138594879
     },
     {
-      "price": 11,
-      "volume": 136777795
+      "price": 10,
+      "volume": 138594879
     }
   ],
   "ALT": [
     {
       "price": 7,
-      "volume": 46732402
+      "volume": 51279237
     },
     {
       "price": 7,
-      "volume": 46732402
+      "volume": 51279237
     }
   ],
   "TLM": [
@@ -781,32 +781,32 @@
   ],
   "AZTEC": [
     {
-      "price": 366.991,
-      "volume": 11142412
+      "price": 345.734,
+      "volume": 13012895
     },
     {
-      "price": 366.991,
-      "volume": 11142412
+      "price": 345.734,
+      "volume": 13012895
     }
   ],
   "PLUME": [
     {
-      "price": 206,
-      "volume": 12855173
+      "price": 211,
+      "volume": 13054750
     },
     {
-      "price": 206,
-      "volume": 12855173
+      "price": 211,
+      "volume": 13054750
     }
   ],
   "WOO": [
     {
       "price": 340,
-      "volume": 2579388
+      "volume": 1606122
     },
     {
       "price": 340,
-      "volume": 2579388
+      "volume": 1606122
     }
   ],
   "RARE": [
@@ -821,52 +821,52 @@
   ],
   "LOOKS": [
     {
-      "price": 7,
-      "volume": 7116127
+      "price": 6,
+      "volume": 7122713
     },
     {
-      "price": 7,
-      "volume": 7116127
+      "price": 6,
+      "volume": 7122713
     }
   ],
   "LINEA": [
     {
-      "price": 67,
-      "volume": 11691008
+      "price": 61,
+      "volume": 11703207
     },
     {
-      "price": 67,
-      "volume": 11691008
+      "price": 61,
+      "volume": 11703207
     }
   ],
   "GRT": [
     {
-      "price": 441,
-      "volume": 1731392
+      "price": 436,
+      "volume": 1657493
     },
     {
-      "price": 441,
-      "volume": 1731392
+      "price": 436,
+      "volume": 1657493
     }
   ],
   "REZ": [
     {
-      "price": 96,
-      "volume": 78417351
+      "price": 91,
+      "volume": 78418451
     },
     {
-      "price": 96,
-      "volume": 78417351
+      "price": 91,
+      "volume": 78418451
     }
   ],
   "ANIME": [
     {
       "price": 84.895,
-      "volume": 3322564
+      "volume": 3208574
     },
     {
       "price": 84.895,
-      "volume": 3322564
+      "volume": 3208574
     }
   ],
   "POND": [
@@ -892,41 +892,41 @@
   "MOVE": [
     {
       "price": 311,
-      "volume": 2968230
+      "volume": 1579018
     },
     {
       "price": 311,
-      "volume": 2968230
+      "volume": 1579018
     }
   ],
   "HMSTR": [
     {
-      "price": 3.257,
-      "volume": 696371772
+      "price": 3.166,
+      "volume": 744239103
     },
     {
-      "price": 3.257,
-      "volume": 696371772
+      "price": 3.166,
+      "volume": 744239103
     }
   ],
   "EDEN": [
     {
-      "price": 669,
-      "volume": 4044694
+      "price": 687,
+      "volume": 4186314
     },
     {
-      "price": 669,
-      "volume": 4044694
+      "price": 687,
+      "volume": 4186314
     }
   ],
   "OGN": [
     {
       "price": 420,
-      "volume": 1033257
+      "volume": 997255
     },
     {
       "price": 420,
-      "volume": 1033257
+      "volume": 997255
     }
   ],
   "VANRY": [
